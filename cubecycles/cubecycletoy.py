@@ -56,7 +56,7 @@ class CCT_Vec(CCT_RotatingObj):
         self.z=z
 
     def __copy__(self):
-        return CCT_RotatingObj(self.x,self.y,self.z)
+        return CCT_Vec(self.x,self.y,self.z)
 
     def __repr__(self):
         return "({0},{1},{2})".format(self.x,self.y,self.z)
