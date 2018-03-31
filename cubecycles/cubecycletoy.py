@@ -141,38 +141,6 @@ class CCT_FaceDir(CCT_RotatingObj):
             print "Chose from {0}".format(CCT_FaceDir.FACES)
             raise e
 
-
-    @staticmethod
-    def Bottom():
-        retVal=CCT_FaceDir.Front().rot90x()
-        retVal.intVal=5
-        return retVal
-
-    @staticmethod
-    def Right():
-        retVal=CCT_FaceDir.Front().rot90y()
-        retVal.intVal=1
-        return retVal
-
-    @staticmethod
-    def Back():
-        retVal=CCT_FaceDir.Front().rot180y()
-        retVal.intVal=2
-        return retVal
-
-    @staticmethod
-    def Left():
-        retVal=CCT_FaceDir.Front().rot270y()
-        retVal.intVal=3
-        return retVal
-
-    @staticmethod
-    def Top():
-        retVal=CCT_FaceDir.Front().rot270x()
-        retVal.intVal=4
-        return retVal
-
-
 class CCT_LabeledRotatingObj(CCT_RotatingObj):
     def __init__(self,label,ro):
         super(self.__class__,self).__init__()
