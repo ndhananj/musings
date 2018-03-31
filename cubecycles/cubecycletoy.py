@@ -74,6 +74,7 @@ class CCT_Vec(CCT_RotatingObj):
         return CCT_Vec(-self.y,self.x,self.z)
 
 class CCT_FaceDir(CCT_RotatingObj):
+
     def __init__(self,rightVec,upVec,outVec):
         super(self.__class__,self).__init__()
         self.rightVec=rightVec
@@ -104,14 +105,42 @@ class CCT_FaceDir(CCT_RotatingObj):
         self.upVec.rot90z(),
         self,outVev.rot90z())
 
+    FACES = ["Front", "Right", "Back", "Left", "Top", "Bottom"]
+    ROT_NEEDED = [None, "rot90y", "rot180y", "rot270y", "rot270y", "rot90y"]
+
     @staticmethod
     def Front():
         retVal= CCT_FaceDir(
         CCT_Vec(1,0,0),
         CCT_Vec(0,1,0),
         CCT_Vec(0,0,1))
-        retVal.intVal=0
+        retVal.intVal=CCT_FaceDir.FACES.index("Front")
         return retVal
+
+    @staticmethod
+    def makeIdxFace(idx):
+        if(idx in range(len(CCT_FaceDir.ROT_NEEDED))):
+            tmp = CCT_FaceDir.Front()
+            if(None==CCT_FaceDir.ROT_NEEDED[idx]):
+                return tmp
+            else:
+                retVal = getattr(tmp,CCT_FaceDir.ROT_NEEDED[idx])()
+                retVal.intVal=idx
+                return retVal
+        else:
+            print "Trying to make unknown face:\n"
+            print " pick idx in {0} ".format(range(len(CCT_FaceDir.ROT_NEEDED)))
+            print "\n or name in {0}".format(CCT_FaceDir.FACES)
+            return None
+
+    @staticmethod
+    def makeNamedFace(name):
+        try:
+            return CCT_FaceDir.makeIdxFace(CCT_FaceDir.FACES.index(name))
+        except ValueError as e:
+            print "Chose from {0}".format(CCT_FaceDir.FACES)
+            raise e
+
 
     @staticmethod
     def Bottom():
