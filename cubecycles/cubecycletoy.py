@@ -4,13 +4,20 @@
 from copy import copy
 class CCT_Rotation(object):
     AXES=["x","y","z"]
-    ANGLES=[90,180,270]
+    ANGLES=[0,90,180,270]
 
     def __init__(self,axis,angle):
         if(axis in CCT_Rotation.AXES):
             self.axis=axis
         if(angle in CCT_Rotation.ANGLES):
             self.angle=angle
+
+    def execute(self,ro):
+        numTimes=self.angle/CCT_Rotation.ANGLES[1]
+        retVal=ro
+        for time in range(numTimes):
+            retVl=retVal.baseRotation(self.axis)
+        return retVal
 
 class CCT_RotatingObj(object):
     def __init__(self):
@@ -28,6 +35,12 @@ class CCT_RotatingObj(object):
         return int(self)+int(other)
 
     __radd__ = __add__
+
+    def baseRotation(self,axis):
+        return self;
+
+    def rot(self,rotation):
+        return rotation.execute(self)
 
     def rot90x(self):
         return self
