@@ -2,6 +2,15 @@
 # Rubik's cube-like objects
 
 from copy import copy
+class CCT_Rotation(object):
+    AXES=["x","y","z"]
+    ANGLES=[90,180,270]
+
+    def __init__(self,axis,angle):
+        if(axis in CCT_Rotation.AXES):
+            self.axis=axis
+        if(angle in CCT_Rotation.ANGLES):
+            self.angle=angle
 
 class CCT_RotatingObj(object):
     def __init__(self):
