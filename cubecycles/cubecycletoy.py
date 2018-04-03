@@ -97,33 +97,31 @@ class CCT_FaceDir(CCT_RotatingObj):
 
     def __init__(self,rightVec,upVec,outVec):
         super(self.__class__,self).__init__()
-        self.rightVec=rightVec
-        self.upVec=upVec
-        self.outVec=outVec
+        self.vecs=[rightVec,upVec,outVec]
 
     def __repr__(self):
-        return "({0}\n{1},\n{2})".format(self.rightVec,self.upVec,self.outVec)
+        return "({0}\n{1},\n{2})".format(self.vecs[0],self.vecs[1],self.vecs[2])
 
     def __copy__(self):
-        return CCT_FaceDir(self.rightVec,self.upVec,self.outVec)
+        return CCT_FaceDir(self.vecs[0],self.vecs[1],self.vecs[2])
 
     def rot90x(self):
         return CCT_FaceDir(
-        self.rightVec.rot90x(),
-        self.upVec.rot90x(),
-        self.outVec.rot90x())
+        self.vecs[0].rot90x(),
+        self.vecs[1].rot90x(),
+        self.vecs[2].rot90x())
 
     def rot90y(self):
         return CCT_FaceDir(
-        self.rightVec.rot90y(),
-        self.upVec.rot90y(),
-        self.outVec.rot90y())
+        self.vecs[0].rot90y(),
+        self.vecs[1].rot90y(),
+        self.vecs[2].rot90y())
 
     def rot90z(self):
         return CCT_FaceDir(
-        self.rightVec.rot90z(),
-        self.upVec.rot90z(),
-        self,outVev.rot90z())
+        self.vecs[0].rot90z(),
+        self.vecs[1].rot90z(),
+        self.vecs[2].rot90z())
 
     FACES = ["Front", "Right", "Back", "Left", "Top", "Bottom"]
     ROT_NEEDED = [None, "rot90y", "rot180y", "rot270y", "rot270y", "rot90y"]
