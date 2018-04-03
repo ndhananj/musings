@@ -144,7 +144,7 @@ class CCT_FaceDir(CCT_RotatingObj):
         self.vecs[2].rot90z())
 
     FACES = ["Front", "Right", "Back", "Left", "Top", "Bottom"]
-    ROT_NEEDED = [None, "rot90y", "rot180y", "rot270y", "rot270y", "rot90y"]
+    ROT_NEEDED = [None, "rot90y", "rot180y", "rot270y", "rot270x", "rot90x"]
 
     @staticmethod
     def Front():
@@ -162,7 +162,7 @@ class CCT_FaceDir(CCT_RotatingObj):
             if(None==CCT_FaceDir.ROT_NEEDED[idx]):
                 return tmp
             else:
-                retVal = getattr(tmp,CCT_FaceDir.ROT_NEEDED[idx])()
+                retVal = tmp.rot(CCT_ROTATIONS[CCT_FaceDir.ROT_NEEDED[idx]])
                 retVal.intVal=idx
                 return retVal
         else:
