@@ -73,27 +73,25 @@ class CCT_RotatingObj(object):
 class CCT_Vec(CCT_RotatingObj):
     def __init__(self,x,y,z):
         super(self.__class__,self).__init__()
-        self.x=x
-        self.y=y
-        self.z=z
+        self.v=[x,y,z]
 
     def __copy__(self):
-        return CCT_Vec(self.x,self.y,self.z)
+        return CCT_Vec(self.v[0],self.v[1],self.v[2])
 
     def __repr__(self):
-        return "({0},{1},{2})".format(self.x,self.y,self.z)
+        return "({0},{1},{2})".format(self.v[0],self.v[1],self.v[2])
 
     def __int__(self):
-        return (1+self.x)+((1+self.y)+(1+self.z)*3)*3
+        return (1+self.v[0])+((1+self.v[1])+(1+self.v[2])*3)*3
 
     def rot90x(self):
-        return CCT_Vec(self.x,-self.z,self.y)
+        return CCT_Vec(self.v[0],-self.v[2],self.v[1])
 
     def rot90y(self):
-        return CCT_Vec(self.z,self.y,-self.x)
+        return CCT_Vec(self.v[2],self.v[1],-self.v[0])
 
     def rot90z(self):
-        return CCT_Vec(-self.y,self.x,self.z)
+        return CCT_Vec(-self.v[1],self.v[0],self.v[2])
 
 class CCT_FaceDir(CCT_RotatingObj):
 
