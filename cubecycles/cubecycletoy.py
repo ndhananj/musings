@@ -2,32 +2,32 @@
 # Rubik's cube-like objects
 
 from copy import copy
-class CCT_Rotation(object):
+class Rotation(object):
     AXES=["x","y","z"]
     ANGLES=[0,90,180,270]
 
     def __init__(self,axis,angle):
-        if(axis in CCT_Rotation.AXES):
-            self.axis=CCT_Rotation.AXES.index(axis)
-        if(angle in CCT_Rotation.ANGLES):
+        if(axis in Rotation.AXES):
+            self.axis=Rotation.AXES.index(axis)
+        if(angle in Rotation.ANGLES):
             self.angle=angle
 
     def __repr__(self):
-        return "rot{0}{1}".format(self.angle,CCT_Rotation.AXES[self.axis])
+        return "rot{0}{1}".format(self.angle,Rotation.AXES[self.axis])
 
     def execute(self,ro):
-        numTimes=self.angle/CCT_Rotation.ANGLES[1]
+        numTimes=self.angle/Rotation.ANGLES[1]
         retVal=ro
         for time in range(numTimes):
             retVal=retVal.baseRotation(self.axis)
         return retVal
 
-CCT_ROTATIONS={}
-for axis in CCT_Rotation.AXES:
-    for angle in CCT_Rotation.ANGLES:
-        CCT_ROTATIONS["rot{0}{1}".format(angle,axis)]=CCT_Rotation(axis,angle)
+ROTATIONS={}
+for axis in Rotation.AXES:
+    for angle in Rotation.ANGLES:
+        ROTATIONS["rot{0}{1}".format(angle,axis)]=Rotation(axis,angle)
 
-class CCT_RotatingObj(object):
+class RotatingObj(object):
     def __init__(self):
         self.intVal=-1
 
@@ -51,13 +51,13 @@ class CCT_RotatingObj(object):
         return rotation.execute(self)
 
 
-class CCT_Vec(CCT_RotatingObj):
+class Vec(RotatingObj):
     def __init__(self,x,y,z):
         super(self.__class__,self).__init__()
         self.v=[x,y,z]
 
     def __copy__(self):
-        return CCT_Vec(self.v[0],self.v[1],self.v[2])
+        return Vec(self.v[0],self.v[1],self.v[2])
 
     def __repr__(self):
         return "({0},{1},{2})".format(self.v[0],self.v[1],self.v[2])
@@ -69,9 +69,9 @@ class CCT_Vec(CCT_RotatingObj):
         v=list(self.v)
         v[(axis+1)%3]=-self.v[(axis+2)%3]
         v[(axis+2)%3]=self.v[(axis+1)%3]
-        return CCT_Vec(v[0],v[1],v[2])
+        return Vec(v[0],v[1],v[2])
 
-class CCT_FaceDir(CCT_RotatingObj):
+class FaceDir(RotatingObj):
 
     def __init__(self,rightVec,upVec,outVec):
         super(self.__class__,self).__init__()
@@ -81,10 +81,10 @@ class CCT_FaceDir(CCT_RotatingObj):
         return "({0}\n{1},\n{2})".format(self.vecs[0],self.vecs[1],self.vecs[2])
 
     def __copy__(self):
-        return CCT_FaceDir(self.vecs[0],self.vecs[1],self.vecs[2])
+        return FaceDir(self.vecs[0],self.vecs[1],self.vecs[2])
 
     def baseRotation(self,axis):
-        return CCT_FaceDir(
+        return FaceDir(
         self.vecs[0].baseRotation(axis),
         self.vecs[1].baseRotation(axis),
         self.vecs[2].baseRotation(axis))
@@ -94,42 +94,42 @@ class CCT_FaceDir(CCT_RotatingObj):
 
     @staticmethod
     def Front():
-        retVal= CCT_FaceDir(
-        CCT_Vec(1,0,0),
-        CCT_Vec(0,1,0),
-        CCT_Vec(0,0,1))
-        retVal.intVal=CCT_FaceDir.FACES.index("Front")
+        retVal= FaceDir(
+        Vec(1,0,0),
+        Vec(0,1,0),
+        Vec(0,0,1))
+        retVal.intVal=FaceDir.FACES.index("Front")
         return retVal
 
     @staticmethod
     def makeIdxFace(idx):
-        if(idx in range(len(CCT_FaceDir.ROT_NEEDED))):
-            tmp = CCT_FaceDir.Front()
-            if(None==CCT_FaceDir.ROT_NEEDED[idx]):
+        if(idx in range(len(FaceDir.ROT_NEEDED))):
+            tmp = FaceDir.Front()
+            if(None==FaceDir.ROT_NEEDED[idx]):
                 return tmp
             else:
-                retVal = tmp.rot(CCT_ROTATIONS[CCT_FaceDir.ROT_NEEDED[idx]])
+                retVal = tmp.rot(ROTATIONS[FaceDir.ROT_NEEDED[idx]])
                 retVal.intVal=idx
                 return retVal
         else:
             print "Trying to make unknown face:\n"
-            print " pick idx in {0} ".format(range(len(CCT_FaceDir.ROT_NEEDED)))
-            print "\n or name in {0}".format(CCT_FaceDir.FACES)
+            print " pick idx in {0} ".format(range(len(FaceDir.ROT_NEEDED)))
+            print "\n or name in {0}".format(FaceDir.FACES)
             return None
 
     @staticmethod
     def makeNamedFace(name):
         try:
-            return CCT_FaceDir.makeIdxFace(CCT_FaceDir.FACES.index(name))
+            return FaceDir.makeIdxFace(FaceDir.FACES.index(name))
         except ValueError as e:
-            print "Chose from {0}".format(CCT_FaceDir.FACES)
+            print "Chose from {0}".format(FaceDir.FACES)
             raise e
 
-CCT_FACES={}
-for face in CCT_FaceDir.FACES:
-    CCT_FACES[face]=CCT_FaceDir.makeNamedFace(face)
+FACES={}
+for face in FaceDir.FACES:
+    FACES[face]=FaceDir.makeNamedFace(face)
 
-class CCT_LabeledRotatingObj(CCT_RotatingObj):
+class LabeledRotatingObj(RotatingObj):
     def __init__(self,label,ro):
         super(self.__class__,self).__init__()
         self.intVal=int(ro)
@@ -140,7 +140,7 @@ class CCT_LabeledRotatingObj(CCT_RotatingObj):
         return "{0}:{1}".format(self.label,self.ro)
 
     def __copy__(self):
-        return CCT_LabeledRotatingObj(self.label,self.ro)
+        return LabeledRotatingObj(self.label,self.ro)
 
     def baseRotation(self,axis):
         return self.ro.baseRotation(axis)
@@ -151,8 +151,7 @@ class CCT_LabeledRotatingObj(CCT_RotatingObj):
     def getLabel(self):
         return self.label
 
-
-class CCT_SectionedGrid(CCT_RotatingObj):
+class SectionedGrid(RotatingObj):
     def __init__(self,face,rows,cols):
         super(self.__class__,self).__init__()
         self.intVal=int(face)*rows*cols
@@ -161,7 +160,7 @@ class CCT_SectionedGrid(CCT_RotatingObj):
             self.grid.append([])
             for col in range(cols):
                 label = self.intVal+row*cols+col
-                self.grid[row].append(CCT_LabeledRotatingObj(label,face))
+                self.grid[row].append(LabeledRotatingObj(label,face))
 
     def __repr__(self):
         return str(self.grid)
