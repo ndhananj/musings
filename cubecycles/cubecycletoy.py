@@ -8,7 +8,7 @@ class CCT_Rotation(object):
 
     def __init__(self,axis,angle):
         if(axis in CCT_Rotation.AXES):
-            self.axis=axis
+            self.axis=CCT_Rotation.AXES.index(axis)
         if(angle in CCT_Rotation.ANGLES):
             self.angle=angle
 
@@ -16,7 +16,7 @@ class CCT_Rotation(object):
         numTimes=self.angle/CCT_Rotation.ANGLES[1]
         retVal=ro
         for time in range(numTimes):
-            retVl=retVal.baseRotation(self.axis)
+            retVal=retVal.baseRotation(self.axis)
         return retVal
 
 class CCT_RotatingObj(object):
