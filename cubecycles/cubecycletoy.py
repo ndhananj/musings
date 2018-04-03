@@ -12,12 +12,20 @@ class CCT_Rotation(object):
         if(angle in CCT_Rotation.ANGLES):
             self.angle=angle
 
+    def __repr__(self):
+        return "rot{0}{1}".format(self.angle,CCT_Rotation.AXES[self.axis])
+
     def execute(self,ro):
         numTimes=self.angle/CCT_Rotation.ANGLES[1]
         retVal=ro
         for time in range(numTimes):
             retVal=retVal.baseRotation(self.axis)
         return retVal
+
+CCT_ROTATIONS={}
+for axis in CCT_Rotation.AXES:
+    for angle in CCT_Rotation.ANGLES:
+        CCT_ROTATIONS["rot{0}{1}".format(angle,axis)]=CCT_Rotation(axis,angle)
 
 class CCT_RotatingObj(object):
     def __init__(self):
@@ -84,6 +92,12 @@ class CCT_Vec(CCT_RotatingObj):
     def __int__(self):
         return (1+self.v[0])+((1+self.v[1])+(1+self.v[2])*3)*3
 
+    def baseRotation(self,axis):
+        v=list(self.v)
+        v[(axis+1)%3]=-self.v[(axis+2)%3]
+        v[(axis+2)%3]=self.v[(axis+1)%3]
+        return CCT_Vec(v[0],v[1],v[2])
+
     def rot90x(self):
         return CCT_Vec(self.v[0],-self.v[2],self.v[1])
 
@@ -104,6 +118,12 @@ class CCT_FaceDir(CCT_RotatingObj):
 
     def __copy__(self):
         return CCT_FaceDir(self.vecs[0],self.vecs[1],self.vecs[2])
+
+    def baseRotation(self,axis):
+        return CCT_FaceDir(
+        self.vecs[0].baseRotation(axis),
+        self.vecs[1].baseRotation(axis),
+        self.vecs[2].baseRotation(axis))
 
     def rot90x(self):
         return CCT_FaceDir(
@@ -171,6 +191,9 @@ class CCT_LabeledRotatingObj(CCT_RotatingObj):
 
     def __copy__(self):
         return CCT_LabeledRotatingObj(self.label,self.ro)
+
+    def baseRotation(self,axis):
+        return self.ro.baseRotation(axis)
 
     def rot90x(self):
         return self.ro.rot90x()
