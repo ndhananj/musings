@@ -125,6 +125,10 @@ class CCT_FaceDir(CCT_RotatingObj):
             print "Chose from {0}".format(CCT_FaceDir.FACES)
             raise e
 
+CCT_FACES={}
+for face in CCT_FaceDir.FACES:
+    CCT_FACES[face]=CCT_FaceDir.makeNamedFace(face)
+
 class CCT_LabeledRotatingObj(CCT_RotatingObj):
     def __init__(self,label,ro):
         super(self.__class__,self).__init__()
@@ -158,6 +162,9 @@ class CCT_SectionedGrid(CCT_RotatingObj):
             for col in range(cols):
                 label = self.intVal+row*cols+col
                 self.grid[row].append(CCT_LabeledRotatingObj(label,face))
+
+    def __repr__(self):
+        return str(self.grid)
 
     def __str__(self):
         return str([list(map(lambda(x):x.getLabel(),x)) for x in self.grid])
