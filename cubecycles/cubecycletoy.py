@@ -50,33 +50,6 @@ class CCT_RotatingObj(object):
     def rot(self,rotation):
         return rotation.execute(self)
 
-    def rot90x(self):
-        return self
-
-    def rot90y(self):
-        return self
-
-    def rot90z(self):
-        return self
-
-    def rot180x(self):
-        return self.rot90x().rot90x()
-
-    def rot180y(self):
-        return self.rot90y().rot90y()
-
-    def rot180z(self):
-        return self.rot90z().rot90z()
-
-    def rot270x(self):
-        return self.rot180x().rot90x()
-
-    def rot270y(self):
-        return self.rot180y().rot90y()
-
-    def rot270z(self):
-        return self.rot180z().rot90z()
-
 
 class CCT_Vec(CCT_RotatingObj):
     def __init__(self,x,y,z):
@@ -98,15 +71,6 @@ class CCT_Vec(CCT_RotatingObj):
         v[(axis+2)%3]=self.v[(axis+1)%3]
         return CCT_Vec(v[0],v[1],v[2])
 
-    def rot90x(self):
-        return CCT_Vec(self.v[0],-self.v[2],self.v[1])
-
-    def rot90y(self):
-        return CCT_Vec(self.v[2],self.v[1],-self.v[0])
-
-    def rot90z(self):
-        return CCT_Vec(-self.v[1],self.v[0],self.v[2])
-
 class CCT_FaceDir(CCT_RotatingObj):
 
     def __init__(self,rightVec,upVec,outVec):
@@ -124,24 +88,6 @@ class CCT_FaceDir(CCT_RotatingObj):
         self.vecs[0].baseRotation(axis),
         self.vecs[1].baseRotation(axis),
         self.vecs[2].baseRotation(axis))
-
-    def rot90x(self):
-        return CCT_FaceDir(
-        self.vecs[0].rot90x(),
-        self.vecs[1].rot90x(),
-        self.vecs[2].rot90x())
-
-    def rot90y(self):
-        return CCT_FaceDir(
-        self.vecs[0].rot90y(),
-        self.vecs[1].rot90y(),
-        self.vecs[2].rot90y())
-
-    def rot90z(self):
-        return CCT_FaceDir(
-        self.vecs[0].rot90z(),
-        self.vecs[1].rot90z(),
-        self.vecs[2].rot90z())
 
     FACES = ["Front", "Right", "Back", "Left", "Top", "Bottom"]
     ROT_NEEDED = [None, "rot90y", "rot180y", "rot270y", "rot270x", "rot90x"]
@@ -194,15 +140,6 @@ class CCT_LabeledRotatingObj(CCT_RotatingObj):
 
     def baseRotation(self,axis):
         return self.ro.baseRotation(axis)
-
-    def rot90x(self):
-        return self.ro.rot90x()
-
-    def rot90y(self):
-        return self.ro.rot90y()
-
-    def rot90z(self):
-        return self.ro.rot90z()
 
     def setLabel(self,label):
         self.label=label
