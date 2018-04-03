@@ -2,7 +2,13 @@
 # Rubik's cube-like objects
 
 from copy import copy
-class Rotation(object):
+class Operation(object):
+    def __init__(self):
+        pass
+    def execute(self,obj):
+        pass
+
+class Rotation(Operation):
     AXES=["x","y","z"]
     ANGLES=[0,90,180,270]
 
@@ -151,10 +157,14 @@ class LabeledRotatingObj(RotatingObj):
     def getLabel(self):
         return self.label
 
+
 class SectionedGrid(RotatingObj):
     def __init__(self,face,rows,cols):
         super(self.__class__,self).__init__()
         self.intVal=int(face)*rows*cols
+        self.face=FACES
+        self.rows=rows
+        self.cols=cols
         self.grid=[]
         for row in range(rows):
             self.grid.append([])
@@ -167,3 +177,14 @@ class SectionedGrid(RotatingObj):
 
     def __str__(self):
         return str([list(map(lambda(x):x.getLabel(),x)) for x in self.grid])
+
+    def baseRotation(self,axis):
+        return SectionedGrid(self.face.baseRotation(),self.rows,self.cols)
+
+class FaceSectionedCube(RotatingObj):
+    def __init__(self,dim):
+        super(self.__class__,self).__init__()
+        self.faces={k: SectionedGrid(v,dim,dim) for k,v in FACES.items()}
+
+    def __repr__(self):
+        return str(self.faces)
