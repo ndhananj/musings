@@ -1,7 +1,7 @@
 #This python file is mean to just create a text based visualization of
 # Rubik's cube-like objects
 
-from copy import copy
+from copy import *
 class Operation(object):
     def __init__(self):
         pass
@@ -162,7 +162,7 @@ class SectionedGrid(RotatingObj):
     def __init__(self,face,rows,cols):
         super(self.__class__,self).__init__()
         self.intVal=int(face)*rows*cols
-        self.face=FACES
+        self.face=face
         self.rows=rows
         self.cols=cols
         self.grid=[]
@@ -179,7 +179,7 @@ class SectionedGrid(RotatingObj):
         return str([list(map(lambda(x):x.getLabel(),x)) for x in self.grid])
 
     def baseRotation(self,axis):
-        return SectionedGrid(self.face.baseRotation(),self.rows,self.cols)
+        return SectionedGrid(self.face.baseRotation(axis),self.rows,self.cols)
 
 class FaceSectionedCube(RotatingObj):
     def __init__(self,dim):
@@ -188,3 +188,8 @@ class FaceSectionedCube(RotatingObj):
 
     def __repr__(self):
         return str(self.faces)
+
+    def baseRotation(self,axis):
+        retVal=deepcopy(self)
+        retVal.faces={k: v.baseRotation(axis) for k,v in self.faces.items()}
+        return retVal
